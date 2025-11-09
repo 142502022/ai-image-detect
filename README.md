@@ -7,6 +7,65 @@ sdk: docker
 app_port: 7860
 ---
 
+# 🚀 AI Image Analyzer
 
+[![Hugging Face Spaces](https://img.shields.io/badge/Hugging%20Face-%F0%9F%A4%97%20Spaces-blue)](https://huggingface.co/spaces/fysiki/ai-image-detector)
 
-Detect the AI image probability and give reason.
+A full-stack web application to detect AI-generated images, identify objects, and provide an explainable AI (XAI) summary of the analysis.
+
+**[Try the live demo here!](https://huggingface.co/spaces/fysiki/ai-image-detector)**
+
+---
+
+![Project Screenshot]([PASTE YOUR SCREENSHOT URL HERE])
+
+## 📖 About This Project
+
+This project is a complete AI-powered tool built for a university presentation. It provides a simple web interface where a user can upload an image and receive a multi-part analysis. The goal is to not only classify an image but to explain *why* it was classified, using modern AI and XAI techniques.
+
+## ✨ Core Features
+
+* **AI vs. Real Classification:** Uses a fine-tuned **Vision Transformer (ViT)** model to classify an image as "AI-generated" or "Real" and provides a confidence score.
+* **Object Detection:** Employs **YOLOv8** to identify and list common objects found in the image.
+* **Explainable AI (XAI):** Generates a **Grad-CAM** (Gradient-weighted Class Activation Mapping) visualization. This heatmap shows exactly which parts of the image the ViT model focused on to make its decision.
+* **AI-Powered Summary:** Uses the **Google Gemini API** to generate a human-readable summary that syntesizes all the findings (classification, objects, and Grad-CAM) into a coherent explanation.
+* **Full-Stack & Deployed:** A complete frontend (HTML/CSS/JS) and backend (FastAPI) application, containerized with **Docker** and deployed on **Hugging Face Spaces**.
+
+---
+
+## 🛠 Tech Stack
+
+| Area | Technology |
+| :--- | :--- |
+| **Backend** | Python, FastAPI, Uvicorn |
+| **Machine Learning** | PyTorch, Hugging Face Transformers, Ultralytics (YOLOv8) |
+| **Generative AI** | Google Generative AI (Gemini) |
+| **Frontend** | HTML, CSS, JavaScript (Fetch API, localStorage) |
+| **Deployment** | Docker, Git LFS, Hugging Face Spaces |
+
+---
+
+## 🔧 How It Works: The Analysis Pipeline
+
+1.  **Frontend:** A user uploads an image. The browser's `fetch` API sends this file to the `/analyze-image` endpoint.
+2.  **Backend (FastAPI):**
+    * The file is saved to a temporary `/tmp/uploads` directory (necessary for the read-only file system on Hugging Face).
+    * **YOLOv8** runs `detect_objects()` on the file.
+    * The **ViT Model** runs `detect_ai_image()` on the file.
+    * The **Grad-CAM** utility runs `generate_gradcam()` on the file.
+    * The **Gemini API** is called with all this data to `generate_gemini_summary()`.
+3.  **Frontend:** The backend returns a single JSON object. The frontend parses this, saves it to `localStorage`, and redirects to `result.html` to display all the information.
+
+---
+
+## 💻 How to Run Locally
+
+### 1. Prerequisites
+* Python 3.10+
+* Git
+* Git LFS (Git Large File Storage)
+
+### 2. Clone the Repository
+```bash
+git clone [https://github.com/142502022/ai-image-detect.git](https://github.com/142502022/ai-image-detect.git)
+cd ai-image-detect
