@@ -111,7 +111,7 @@ if (!data) {
   `;
 } else {
   // ✅ Show image preview
-  document.getElementById("imagePreview").src = `http://127.0.0.1:7860/uploads/${data.filename}`;
+  document.getElementById("imagePreview").src = `/uploads/${data.filename}`;
   
   // ✅ Show detected objects
   const objectsList = document.getElementById("objectsList");
@@ -163,7 +163,7 @@ async function generateGradCAM() {
 
   try {
     // Fetch the original image file
-    const fileResponse = await fetch(`http://127.0.0.1:7860/uploads/${data.filename}`);
+    const fileResponse = await fetch(`/uploads/${data.filename}`);
     
     if (!fileResponse.ok) {
       throw new Error("Failed to fetch image file");
@@ -189,7 +189,7 @@ async function generateGradCAM() {
     console.log("Sending file:", data.filename, "Type:", mimeType);
 
     // Request Grad-CAM visualization
-    const response = await fetch("http://127.0.0.1:7860/gradcam", {
+    const response = await fetch("/gradcam", {
       method: "POST",
       body: formData
     });
@@ -220,7 +220,7 @@ async function generateGradCAM() {
         : result.gradcam_image;
       
       resultDiv.innerHTML = `
-        <img src="http://127.0.0.1:7860/${imagePath}" 
+        <img src="/${imagePath}" 
              alt="Grad-CAM Visualization"
              width="400"
              style="border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.2);margin-top:10px;"
@@ -255,59 +255,7 @@ async function generateGradCAM() {
   }
 }
 </script>
-<script>
-  // Safely load JSON result from localStorage
-  
-  try {
-    const stored = localStorage.getItem("imageResult");
-    if (stored && stored.trim() !== "") {
-      data = JSON.parse(stored);
-    }
-  } catch (err) {
-    console.error("❌ Failed to parse localStorage:", err);
-  }
 
-  if (!data) {
-    document.body.innerHTML = `
-      <p style="color:red;">⚠️ No analysis data found. Please upload an image first.</p>
-      <a href="index.html">Go Back</a>
-    `;
-  } else {
-    // === Show uploaded image ===
-    document.getElementById("imagePreview").src =
-      `http://127.0.0.1:7860/uploads/${data.filename}`;
-
-    // === Show detected objects ===
-    const list = document.getElementById("objectsList");
-    data.objects.forEach(obj => {
-      const li = document.createElement("li");
-      li.textContent = obj;
-      list.appendChild(li);
-    });
-
-    // === AI probability ===
-    document.getElementById("aiProb").innerText =
-      (data.ai_probability * 100).toFixed(2) + "%";
-
-    // === Summary text ===
-    document.getElementById("summaryText").innerText =
-      data.summary || "Summary not available.";
-
-    // === Auto-display Grad-CAM ===
-    if (data.gradcam_image) {
-      const gradcamDiv = document.createElement("div");
-      gradcamDiv.innerHTML = `
-        <h3>Grad-CAM Visualization:</h3>
-        <img src="http://127.0.0.1:7860${data.gradcam_image}"
-             width="400"
-             style="border-radius:10px;
-                    margin-top:10px;
-                    box-shadow:0 2px 10px rgba(0,0,0,0.25);">
-      `;
-      document.body.appendChild(gradcamDiv);
-    }
-  }
-</script>
 
 
 </body>
