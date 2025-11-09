@@ -29,3 +29,14 @@ EXPOSE 7860
 # If you mount / serve frontend static files from FastAPI,
 # make sure your backend.main mounts frontend (see next step).
 CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "7860"]
+
+
+
+
+# Read the doc: https://huggingface.co/docs/hub/spaces-sdks-docker
+# you will also find guides on how best to write your Dockerfile
+
+# Read the doc: https://huggingface.co/docs/hub/spaces-sdks-docker
+# you will also find guides on how best to write your Dockerfile
+
+
